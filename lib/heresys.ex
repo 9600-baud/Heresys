@@ -18,4 +18,8 @@ defmodule Heresys do
     Supervisor.start_link(children, strategy: :one_for_one)
   end
 
+  def hello() do
+    {:world}
+  end
+
 end
