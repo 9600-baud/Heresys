@@ -1,4 +1,5 @@
 # Heresys
+![ci_badge](https://github.com/9600-baud/Heresys/workflows/Elixir%20CI/badge.svg)
 
 **TODO: Add description**
 
