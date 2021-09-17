@@ -11,7 +11,7 @@ defmodule Heresys.Network.Supervisor do
   def init(:ok) do
     children = [
       {Task.Supervisor, name: Heresys.Network.TaskSupervisor},
-      {Heresys.Network.TCPServer, 9001},
+      {Heresys.Network.TCPPlayerServer, 9001},
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

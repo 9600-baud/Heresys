@@ -16,12 +16,10 @@ defmodule Heresys.Entity.Player do
   """
 
   @impl true
-  @spec new(socket :: port) :: {:ok, pid :: pid}
   def new(socket) do
-    {:ok, supervisor} = Player.Manager.start_child(socket)
-    {:ok, terminal}  = supervisor |> Player.Supervisor.get_terminal()
-    IO.inspect(terminal)
-    Heresys.Entity.Terminal.register(terminal)
+    {:ok, supervisor} = Player.Manager.start_child()
+    {:ok, terminal}   = Player.Supervisor.start_child(supervisor, Player.Terminal, {supervisor, socket})
+    {:ok, _pid} = Player.Terminal.start_shell(terminal, Heresys.Shell.System, [])
     {:ok, terminal}
   end
 
@@ -30,4 +28,6 @@ defmodule Heresys.Entity.Player do
 
   @impl true
   def egress(pid, data), do: Player.Terminal.egress(pid, data)
+
+  def start_shell(pid, module, args \\ []), do: Player.Terminal.start_shell(pid, module, args)
 end

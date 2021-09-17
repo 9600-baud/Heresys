@@ -1,31 +1,21 @@
 defmodule Heresys.Entity.Player.Supervisor do
 
-  use Supervisor
+  use Supervisor, restart: :transient
   use Heresys.Entity.Player
-  use Heresys.Shell
 
-  def start_link(socket) do
-    Supervisor.start_link(__MODULE__, {:ok, socket})
+  def start_link(args \\ []) do
+    Supervisor.start_link(__MODULE__, args)
   end
 
   @impl true
-  def init({:ok, socket}) do
-    children = [
-      {Player.Register, fn -> [] end},
-      {Player.Terminal, socket},
-      {Shell.Supervisor, []},
-    ]
+  def init(_args) do
+    children = []
 
-    Supervisor.init(children, strategy: :one_for_one)
+    Supervisor.init(children, strategy: :rest_for_one)
   end
 
-  def get_terminal(pid) do
-    children = Supervisor.which_children(pid)
-
-    {_module, terminal_pid, _type, _args} = Enum.find(
-      children, {:error, :noterminal}, fn {module, _pid, _type, _args} ->
-        module == Player.Terminal
-    end)
-    {:ok, terminal_pid}
+  def start_child(pid, module, args) do
+    spec = {module, args}
+    {:ok, _pid} = Supervisor.start_child(pid, spec)
   end
 end

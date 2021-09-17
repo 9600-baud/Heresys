@@ -13,7 +13,7 @@ defmodule Heresys.Entity.Player.Manager do
   @impl true
   def init(:ok), do: DynamicSupervisor.init(strategy: :one_for_one)
 
-  def start_child(args) do
+  def start_child(args \\ []) do
     spec = {Player.Supervisor, args}
     DynamicSupervisor.start_child(__MODULE__, spec)
   end
